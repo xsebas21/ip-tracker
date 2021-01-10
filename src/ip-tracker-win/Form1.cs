@@ -1,12 +1,6 @@
 ﻿using ip_tracker_library;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace ip_tracker_win
@@ -55,8 +49,9 @@ namespace ip_tracker_win
             if (data.EventType == "IPChanged")
             {
                 var message = $"{args.Time}: {args.IP}{Environment.NewLine}";
-                textBox1.Text = message;
-                textBox1.Text = textBox1.Text.TrimEnd(Environment.NewLine.ToCharArray());
+                textBox1.Text += message;
+                textBox1.Focus();
+                textBox1.Select(textBox1.Text.Length - 1, 0);
             }
         }
 

@@ -43,6 +43,7 @@ namespace ip_tracker_library
 
             if (publicIp != lastIp)
             {
+                lastIp = publicIp;
                 OnIPChanged(args);
             }
         }

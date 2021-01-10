@@ -43,11 +43,12 @@ namespace ip_tracker_win
             // 
             this.textBox1.AcceptsReturn = true;
             this.textBox1.AcceptsTab = true;
-            this.textBox1.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.textBox1.Location = new System.Drawing.Point(65, 69);
+            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox1.Location = new System.Drawing.Point(0, 0);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(622, 292);
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(800, 450);
             this.textBox1.TabIndex = 1;
             // 
             // worker
