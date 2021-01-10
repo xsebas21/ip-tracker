@@ -30,12 +30,81 @@ namespace ip_tracker_win
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.worker = new System.ComponentModel.BackgroundWorker();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.statusBar = new System.Windows.Forms.StatusStrip();
+            this.statusLastTime = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusCounter = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusBar.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // textBox1
+            // 
+            this.textBox1.AcceptsReturn = true;
+            this.textBox1.AcceptsTab = true;
+            this.textBox1.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
+            this.textBox1.Location = new System.Drawing.Point(65, 69);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(622, 292);
+            this.textBox1.TabIndex = 1;
+            // 
+            // worker
+            // 
+            this.worker.WorkerReportsProgress = true;
+            // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // statusBar
+            // 
+            this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusLastTime,
+            this.statusCounter});
+            this.statusBar.Location = new System.Drawing.Point(0, 428);
+            this.statusBar.Name = "statusBar";
+            this.statusBar.Size = new System.Drawing.Size(800, 22);
+            this.statusBar.TabIndex = 2;
+            this.statusBar.Text = "statusStripLastTime";
+            // 
+            // statusLastTime
+            // 
+            this.statusLastTime.Name = "statusLastTime";
+            this.statusLastTime.Size = new System.Drawing.Size(85, 17);
+            this.statusLastTime.Text = "statusLastTime";
+            // 
+            // statusCounter
+            // 
+            this.statusCounter.Name = "statusCounter";
+            this.statusCounter.Size = new System.Drawing.Size(81, 17);
+            this.statusCounter.Text = "statusCounter";
+            // 
+            // Form1
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.statusBar);
+            this.Controls.Add(this.textBox1);
+            this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.Form1_Load);
+            this.statusBar.ResumeLayout(false);
+            this.statusBar.PerformLayout();
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         #endregion
+        private System.Windows.Forms.TextBox textBox1;
+        private System.ComponentModel.BackgroundWorker worker;
+        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.StatusStrip statusBar;
+        private System.Windows.Forms.ToolStripStatusLabel statusLastTime;
+        private System.Windows.Forms.ToolStripStatusLabel statusCounter;
     }
 }
 
