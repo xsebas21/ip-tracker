@@ -21,7 +21,6 @@ namespace ip_tracker_library
         private int checksCounter = 0;
         #endregion
 
-
         #region Public Methods
         /// <summary>
         /// Gets the public IP address and compares it to the last one
@@ -36,7 +35,8 @@ namespace ip_tracker_library
             {
                 Time = DateTime.Now,
                 IP = publicIp,
-                ChecksCounter = ++checksCounter
+                ChecksCounter = ++checksCounter,
+                EventType = EngineEventType.IPChecked
             };
 
             OnIPChecked(args);
@@ -44,12 +44,14 @@ namespace ip_tracker_library
             if (publicIp != lastIp)
             {
                 lastIp = publicIp;
+
+                args.EventType = EngineEventType.IPChanged;
                 OnIPChanged(args);
             }
         }
         #endregion
 
-        #region Events
+        #region Trigger Events
         protected virtual void OnIPChecked(EventArgs e)
         {
             EventHandler handler = IPChecked;
