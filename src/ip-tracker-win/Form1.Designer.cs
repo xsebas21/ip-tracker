@@ -30,12 +30,14 @@ namespace ip_tracker_win
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.worker = new System.ComponentModel.BackgroundWorker();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.statusBar = new System.Windows.Forms.StatusStrip();
             this.statusLastTime = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusCounter = new System.Windows.Forms.ToolStripStatusLabel();
+            this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.statusBar.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -43,11 +45,13 @@ namespace ip_tracker_win
             // 
             this.textBox1.AcceptsReturn = true;
             this.textBox1.AcceptsTab = true;
-            this.textBox1.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
-            this.textBox1.Location = new System.Drawing.Point(65, 69);
+            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBox1.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.textBox1.Location = new System.Drawing.Point(0, 0);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(622, 292);
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(800, 450);
             this.textBox1.TabIndex = 1;
             // 
             // worker
@@ -81,6 +85,12 @@ namespace ip_tracker_win
             this.statusCounter.Size = new System.Drawing.Size(81, 17);
             this.statusCounter.Text = "statusCounter";
             // 
+            // notifyIcon1
+            // 
+            this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
+            this.notifyIcon1.Text = "notifyIcon1";
+            this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -91,6 +101,7 @@ namespace ip_tracker_win
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.Resize += new System.EventHandler(this.Form1_Resize);
             this.statusBar.ResumeLayout(false);
             this.statusBar.PerformLayout();
             this.ResumeLayout(false);
@@ -105,6 +116,7 @@ namespace ip_tracker_win
         private System.Windows.Forms.StatusStrip statusBar;
         private System.Windows.Forms.ToolStripStatusLabel statusLastTime;
         private System.Windows.Forms.ToolStripStatusLabel statusCounter;
+        private System.Windows.Forms.NotifyIcon notifyIcon1;
     }
 }
 
