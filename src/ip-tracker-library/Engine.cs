@@ -11,8 +11,9 @@ namespace ip_tracker_library
     public class Engine
     {
         #region Events
-        public event EventHandler IPChecked;
-        public event EventHandler IPChanged;
+        public event EventHandler<EngineCheckEventArgs> IPChecked;
+        public event EventHandler<EngineCheckEventArgs> IPChanged;
+        public event EventHandler<EngineErrorEventArgs> CheckError;
         #endregion
 
         #region Private static members
@@ -28,10 +29,26 @@ namespace ip_tracker_library
         /// </summary>
         public void Check()
         {
-            var response = new WebClient().DownloadString(host);
-            var publicIp = response.Trim(Environment.NewLine.ToCharArray()).Trim();
+            var publicIp = "0.0.0.0";
 
-            var args = new EngineEventArgs
+            try
+            {
+                var response = new WebClient().DownloadString(host);
+                publicIp = response.Trim(Environment.NewLine.ToCharArray()).Trim();
+            }
+            catch (Exception ex)
+            {
+                var errorArgs = new EngineErrorEventArgs
+                {
+                    Time = DateTime.Now,
+                    EventType = EngineEventType.CheckError,
+                    Exception = ex
+                };
+
+                OnCheckError(errorArgs);
+            }
+
+            var args = new EngineCheckEventArgs
             {
                 Time = DateTime.Now,
                 IP = publicIp,
@@ -52,15 +69,21 @@ namespace ip_tracker_library
         #endregion
 
         #region Trigger Events
-        protected virtual void OnIPChecked(EventArgs e)
+        protected virtual void OnIPChecked(EngineCheckEventArgs e)
         {
-            EventHandler handler = IPChecked;
+            var handler = IPChecked;
             handler?.Invoke(this, e);
         }
 
-        protected virtual void OnIPChanged(EventArgs e)
+        protected virtual void OnIPChanged(EngineCheckEventArgs e)
         {
-            EventHandler handler = IPChanged;
+            var handler = IPChanged;
+            handler?.Invoke(this, e);
+        }
+
+        protected virtual void OnCheckError(EngineErrorEventArgs e)
+        {
+            var handler = CheckError;
             handler?.Invoke(this, e);
         }
         #endregion

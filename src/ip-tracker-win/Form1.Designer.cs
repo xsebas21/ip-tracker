@@ -38,6 +38,7 @@ namespace ip_tracker_win
             this.statusLastTime = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusCounter = new System.Windows.Forms.ToolStripStatusLabel();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
+            this.statusInterval = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusBar.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -66,7 +67,8 @@ namespace ip_tracker_win
             // 
             this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLastTime,
-            this.statusCounter});
+            this.statusCounter,
+            this.statusInterval});
             this.statusBar.Location = new System.Drawing.Point(0, 428);
             this.statusBar.Name = "statusBar";
             this.statusBar.Size = new System.Drawing.Size(800, 22);
@@ -90,6 +92,12 @@ namespace ip_tracker_win
             this.notifyIcon1.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyIcon1.Icon")));
             this.notifyIcon1.Text = "notifyIcon1";
             this.notifyIcon1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyIcon1_MouseDoubleClick);
+            // 
+            // statusInterval
+            // 
+            this.statusInterval.Name = "statusInterval";
+            this.statusInterval.Size = new System.Drawing.Size(77, 17);
+            this.statusInterval.Text = "statusInterval";
             // 
             // Form1
             // 
@@ -117,6 +125,7 @@ namespace ip_tracker_win
         private System.Windows.Forms.ToolStripStatusLabel statusLastTime;
         private System.Windows.Forms.ToolStripStatusLabel statusCounter;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
+        private System.Windows.Forms.ToolStripStatusLabel statusInterval;
     }
 }
 
