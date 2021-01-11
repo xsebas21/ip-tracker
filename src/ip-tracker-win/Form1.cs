@@ -14,7 +14,7 @@ namespace ip_tracker_win
 
         #region Private Members
         private static readonly Engine _engine = new Engine();
-        private int _interval = 10000;
+        private int _interval = 5000;
         private bool isFirstTime = true; // First run? Don't show a windows notification when the IP changes
         #endregion
 
@@ -26,6 +26,7 @@ namespace ip_tracker_win
             // Engine
             _engine.IPChanged += Engine_IPChanged;
             _engine.IPChecked += Engine_IPChecked;
+            _engine.CheckError += Engine_CheckError;
 
             // Worker
             worker.DoWork += new DoWorkEventHandler(this.worker_DoWork);
@@ -42,13 +43,16 @@ namespace ip_tracker_win
                 }
             };
 
+            // Status bar
+            statusInterval.Text = $"Refresh interval: {_interval} ms";
+
         }
         #endregion
 
         #region Event Handlers
         private void Form1_Load(object sender, EventArgs e)
         {
-            _engine.Check();
+            EngineCheck();
         }
         private void timer1_Tick(object sender, EventArgs e)
         {
@@ -57,17 +61,27 @@ namespace ip_tracker_win
 
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
+            EngineCheck();
+        }
+
+        private void EngineCheck()
+        {
             _engine.Check();
         }
 
-        private void Engine_IPChecked(object sender, EventArgs e)
+        private void Engine_IPChecked(object sender, EngineEventArgs e)
         {
-            worker.ReportProgress(0, (EngineEventArgs)e);
+            worker.ReportProgress(0, e);
         }
 
-        private void Engine_IPChanged(object sender, EventArgs e)
+        private void Engine_IPChanged(object sender, EngineEventArgs e)
         {
-            worker.ReportProgress(0, (EngineEventArgs)e);
+            worker.ReportProgress(0, e);
+        }
+
+        private void Engine_CheckError(object sender, EngineEventArgs e)
+        {
+            worker.ReportProgress(0, e);
         }
 
         private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -76,50 +90,12 @@ namespace ip_tracker_win
             var uiHandlers = new Dictionary<EngineEventType, Action<EngineEventArgs>>
             {
                 { EngineEventType.IPChecked, HandleUIForIpChecked },
-                { EngineEventType.IPChanged, HandleUIForIpChanged }
+                { EngineEventType.IPChanged, HandleUIForIpChanged },
+                { EngineEventType.CheckError, HandleUIForEngineError }
             };
 
             uiHandlers[engineEventArgs.EventType](engineEventArgs);
         }
-        #endregion
-
-        #region Private Methods
-        private void HandleUIForIpChecked(EngineEventArgs engineEventArgs)
-        {
-            statusLastTime.Text = $"Last time checked: {engineEventArgs.Time}";
-            statusCounter.Text = $"Times checked: {engineEventArgs.ChecksCounter}";           
-        }
-
-        private void HandleUIForIpChanged(EngineEventArgs engineEventArgs)
-        {
-            // Form
-            this.Text = $"{engineEventArgs.IP} - Current Public IP";
-
-            // Textbox
-            var message = $"{engineEventArgs.Time} ==> {engineEventArgs.IP}";
-            textBox1.Text += message + Environment.NewLine;
-            textBox1.Focus();
-            textBox1.Select(textBox1.Text.Length - 1, 0);
-
-            // Windows notification
-            NotifyWindows(engineEventArgs);
-
-            //Log
-            _logger.Info(message);
-        }
-
-        private void NotifyWindows(EngineEventArgs engineEventArgs)
-        {
-            // Info and icon settings            
-            notifyIcon1.BalloonTipTitle = isFirstTime ? "Current IP: " : "IP Changed. New IP:";
-            notifyIcon1.BalloonTipText = engineEventArgs.IP;
-            notifyIcon1.Text = "Current IP: " + engineEventArgs.IP;
-            isFirstTime = false;
-
-            notifyIcon1.ShowBalloonTip(2000);
-            //notifyIcon1.ShowBalloonTip(1000, "title", "text", ToolTipIcon.Info);
-        }
-        #endregion
 
         private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
         {
@@ -140,5 +116,65 @@ namespace ip_tracker_win
                 notifyIcon1.Visible = false;
             }
         }
+        #endregion
+
+        #region Private Methods
+        private void HandleUIForIpChecked(EngineEventArgs eventArgs)
+        {
+            var engineEventArgs = (EngineCheckEventArgs)eventArgs;
+            statusLastTime.Text = $"Last time checked: {engineEventArgs.Time}";
+            statusCounter.Text = $"Times checked: {engineEventArgs.ChecksCounter}";
+        }
+
+        private void HandleUIForIpChanged(EngineEventArgs eventArgs)
+        {
+            var engineCheckEventArgs = (EngineCheckEventArgs)eventArgs;
+
+            // Form
+            this.Text = $"{engineCheckEventArgs.IP} - Current Public IP";
+
+            // Textbox
+            var message = $"{engineCheckEventArgs.Time} \t\t{engineCheckEventArgs.IP}";
+            textBox1.Text += message + Environment.NewLine;
+            textBox1.Focus();
+            textBox1.Select(textBox1.Text.Length - 1, 0);
+
+            // Windows notification
+            NotifyWindows(engineCheckEventArgs);
+
+            //Log
+            _logger.Info(message);
+        }
+
+        private void HandleUIForEngineError(EngineEventArgs eventArgs)
+        {
+            var engineErrorEventArgs = (EngineErrorEventArgs)eventArgs;
+            
+            // Form
+            this.Text = $"Current Public IP: NONE! Can't determine your IP";
+
+            // Textbox
+            var message = $"{engineErrorEventArgs.Time} ==> Not connected. Can't determine your IP";
+            textBox1.Text += message + Environment.NewLine;
+            textBox1.Focus();
+            textBox1.Select(textBox1.Text.Length - 1, 0);
+
+            //Log
+            _logger.Error(message, engineErrorEventArgs.Exception);
+        }
+
+        private void NotifyWindows(EngineCheckEventArgs engineEventArgs)
+        {
+            // Info and icon settings            
+            notifyIcon1.BalloonTipTitle = isFirstTime ? "Current IP: " : "IP Changed. New IP:";
+            notifyIcon1.BalloonTipText = engineEventArgs.IP;
+            notifyIcon1.Text = "Current IP: " + engineEventArgs.IP;
+            isFirstTime = false;
+
+            notifyIcon1.ShowBalloonTip(2000);
+            //notifyIcon1.ShowBalloonTip(1000, "title", "text", ToolTipIcon.Info);
+        }
+        #endregion
+
     }
 }

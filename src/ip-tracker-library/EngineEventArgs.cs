@@ -9,14 +9,24 @@ namespace ip_tracker_library
     public enum EngineEventType
     {
         IPChecked,
-        IPChanged
+        IPChanged,
+        CheckError
     }
 
-    public class EngineEventArgs : EventArgs
+    public abstract class EngineEventArgs : EventArgs
     {
         public DateTime Time { get; set; }
+        public EngineEventType EventType { get; set; }
+    }
+
+    public class EngineCheckEventArgs : EngineEventArgs
+    {
         public string IP { get; set; }
         public int ChecksCounter { get; set; }
-        public EngineEventType EventType { get; set; }
+    }
+
+    public class EngineErrorEventArgs : EngineEventArgs
+    {
+        public Exception Exception { get; set; }
     }
 }
