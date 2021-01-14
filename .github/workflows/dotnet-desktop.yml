@@ -52,7 +52,6 @@ jobs:
     strategy:
       matrix:
         configuration: [Debug, Release]
-        platform: [AnyCPU]
         
     runs-on: windows-latest  # For a list of available runner types, refer to 
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
@@ -82,5 +81,8 @@ jobs:
     #- name: Nuget restore
     #  run: nuget restore -verbosity normal
     
-    - name: Build
-      run:  msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration #MSBuild ip-tracker.sln
+    # Restore the application to populate the obj folder with RuntimeIdentifiers
+    - name: Build the application
+      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+      env:
+        Configuration: ${{ matrix.configuration }}
