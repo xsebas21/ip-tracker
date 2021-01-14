@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ip_tracker_library
 {
@@ -29,18 +24,19 @@ namespace ip_tracker_library
         /// </summary>
         public void Check()
         {
-            var publicIp = "0.0.0.0";
+            var defaultIp = "0.0.0.0";
+            var now = DateTime.Now;
 
             try
             {
                 var response = new WebClient().DownloadString(host);
-                publicIp = response.Trim(Environment.NewLine.ToCharArray()).Trim();
+                defaultIp = response.Trim(Environment.NewLine.ToCharArray()).Trim();
             }
             catch (Exception ex)
             {
                 var errorArgs = new EngineErrorEventArgs
                 {
-                    Time = DateTime.Now,
+                    Time = now,
                     EventType = EngineEventType.CheckError,
                     Exception = ex
                 };
@@ -50,17 +46,17 @@ namespace ip_tracker_library
 
             var args = new EngineCheckEventArgs
             {
-                Time = DateTime.Now,
-                IP = publicIp,
+                Time = now,
+                IP = defaultIp,
                 ChecksCounter = ++checksCounter,
                 EventType = EngineEventType.IPChecked
             };
 
             OnIPChecked(args);
 
-            if (publicIp != lastIp)
+            if (defaultIp != lastIp)
             {
-                lastIp = publicIp;
+                lastIp = defaultIp;
 
                 args.EventType = EngineEventType.IPChanged;
                 OnIPChanged(args);

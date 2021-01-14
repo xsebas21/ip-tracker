@@ -31,11 +31,11 @@ namespace ip_tracker_win
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.outputTextbox = new System.Windows.Forms.TextBox();
             this.worker = new System.ComponentModel.BackgroundWorker();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.checkTimer = new System.Windows.Forms.Timer(this.components);
             this.statusBar = new System.Windows.Forms.StatusStrip();
-            this.statusLastTime = new System.Windows.Forms.ToolStripStatusLabel();
+            this.statusUpdated = new System.Windows.Forms.ToolStripStatusLabel();
             this.statusCounter = new System.Windows.Forms.ToolStripStatusLabel();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
             this.statusInterval = new System.Windows.Forms.ToolStripStatusLabel();
@@ -44,16 +44,16 @@ namespace ip_tracker_win
             // 
             // textBox1
             // 
-            this.textBox1.AcceptsReturn = true;
-            this.textBox1.AcceptsTab = true;
-            this.textBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBox1.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.textBox1.Location = new System.Drawing.Point(0, 0);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(800, 450);
-            this.textBox1.TabIndex = 1;
+            this.outputTextbox.AcceptsReturn = true;
+            this.outputTextbox.AcceptsTab = true;
+            this.outputTextbox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.outputTextbox.Font = new System.Drawing.Font("Calibri", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.outputTextbox.Location = new System.Drawing.Point(0, 0);
+            this.outputTextbox.Multiline = true;
+            this.outputTextbox.Name = "textBox1";
+            this.outputTextbox.ReadOnly = true;
+            this.outputTextbox.Size = new System.Drawing.Size(800, 450);
+            this.outputTextbox.TabIndex = 1;
             // 
             // worker
             // 
@@ -61,12 +61,12 @@ namespace ip_tracker_win
             // 
             // timer1
             // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.checkTimer.Tick += new System.EventHandler(this.checkTimer_Tick);
             // 
             // statusBar
             // 
             this.statusBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.statusLastTime,
+            this.statusUpdated,
             this.statusCounter,
             this.statusInterval});
             this.statusBar.Location = new System.Drawing.Point(0, 428);
@@ -77,9 +77,9 @@ namespace ip_tracker_win
             // 
             // statusLastTime
             // 
-            this.statusLastTime.Name = "statusLastTime";
-            this.statusLastTime.Size = new System.Drawing.Size(85, 17);
-            this.statusLastTime.Text = "statusLastTime";
+            this.statusUpdated.Name = "statusLastTime";
+            this.statusUpdated.Size = new System.Drawing.Size(85, 17);
+            this.statusUpdated.Text = "statusLastTime";
             // 
             // statusCounter
             // 
@@ -105,7 +105,7 @@ namespace ip_tracker_win
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.statusBar);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.outputTextbox);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -118,11 +118,11 @@ namespace ip_tracker_win
         }
 
         #endregion
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox outputTextbox;
         private System.ComponentModel.BackgroundWorker worker;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer checkTimer;
         private System.Windows.Forms.StatusStrip statusBar;
-        private System.Windows.Forms.ToolStripStatusLabel statusLastTime;
+        private System.Windows.Forms.ToolStripStatusLabel statusUpdated;
         private System.Windows.Forms.ToolStripStatusLabel statusCounter;
         private System.Windows.Forms.NotifyIcon notifyIcon1;
         private System.Windows.Forms.ToolStripStatusLabel statusInterval;

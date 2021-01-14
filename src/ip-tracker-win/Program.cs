@@ -15,6 +15,7 @@ namespace ip_tracker_win
         [STAThread]
         static void Main()
         {
+            // log4net file configuration
             log4net.Config.XmlConfigurator.ConfigureAndWatch(new FileInfo("log4net.config"));
 
             Application.SetHighDpiMode(HighDpiMode.SystemAware);

@@ -14,7 +14,7 @@ namespace ip_tracker_win
 
         #region Private Members
         private static readonly Engine _engine = new Engine();
-        private int _interval = 5000;
+        private int _interval = 60000;
         private bool isFirstTime = true; // First run? Don't show a windows notification when the IP changes
         #endregion
 
@@ -33,9 +33,9 @@ namespace ip_tracker_win
             worker.ProgressChanged += Worker_ProgressChanged;
 
             // Set the timer
-            timer1.Interval = _interval;
-            timer1.Start();
-            timer1.Tick += (o, e) =>
+            checkTimer.Interval = _interval;
+            checkTimer.Start();
+            checkTimer.Tick += (o, e) =>
             {
                 if (!worker.IsBusy)
                 {
@@ -45,7 +45,6 @@ namespace ip_tracker_win
 
             // Status bar
             statusInterval.Text = $"Refresh interval: {_interval} ms";
-
         }
         #endregion
 
@@ -54,7 +53,7 @@ namespace ip_tracker_win
         {
             EngineCheck();
         }
-        private void timer1_Tick(object sender, EventArgs e)
+        private void checkTimer_Tick(object sender, EventArgs e)
         {
             worker.RunWorkerAsync();
         }
@@ -62,12 +61,7 @@ namespace ip_tracker_win
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             EngineCheck();
-        }
-
-        private void EngineCheck()
-        {
-            _engine.Check();
-        }
+        }       
 
         private void Engine_IPChecked(object sender, EngineEventArgs e)
         {
@@ -119,10 +113,15 @@ namespace ip_tracker_win
         #endregion
 
         #region Private Methods
+        private void EngineCheck()
+        {
+            _engine.Check();
+        }
+
         private void HandleUIForIpChecked(EngineEventArgs eventArgs)
         {
             var engineEventArgs = (EngineCheckEventArgs)eventArgs;
-            statusLastTime.Text = $"Last time checked: {engineEventArgs.Time}";
+            statusUpdated.Text = $"Updated: {engineEventArgs.Time}";
             statusCounter.Text = $"Times checked: {engineEventArgs.ChecksCounter}";
         }
 
@@ -135,9 +134,9 @@ namespace ip_tracker_win
 
             // Textbox
             var message = $"{engineCheckEventArgs.Time} \t\t{engineCheckEventArgs.IP}";
-            textBox1.Text += message + Environment.NewLine;
-            textBox1.Focus();
-            textBox1.Select(textBox1.Text.Length - 1, 0);
+            outputTextbox.Text += message + Environment.NewLine;
+            outputTextbox.Focus();
+            outputTextbox.Select(outputTextbox.Text.Length - 1, 0);
 
             // Windows notification
             NotifyWindows(engineCheckEventArgs);
@@ -155,9 +154,9 @@ namespace ip_tracker_win
 
             // Textbox
             var message = $"{engineErrorEventArgs.Time} ==> Not connected. Can't determine your IP";
-            textBox1.Text += message + Environment.NewLine;
-            textBox1.Focus();
-            textBox1.Select(textBox1.Text.Length - 1, 0);
+            outputTextbox.Text += message + Environment.NewLine;
+            outputTextbox.Focus();
+            outputTextbox.Select(outputTextbox.Text.Length - 1, 0);
 
             //Log
             _logger.Error(message, engineErrorEventArgs.Exception);
@@ -169,10 +168,9 @@ namespace ip_tracker_win
             notifyIcon1.BalloonTipTitle = isFirstTime ? "Current IP: " : "IP Changed. New IP:";
             notifyIcon1.BalloonTipText = engineEventArgs.IP;
             notifyIcon1.Text = "Current IP: " + engineEventArgs.IP;
-            isFirstTime = false;
-
             notifyIcon1.ShowBalloonTip(2000);
-            //notifyIcon1.ShowBalloonTip(1000, "title", "text", ToolTipIcon.Info);
+
+            isFirstTime = false;            
         }
         #endregion
 
