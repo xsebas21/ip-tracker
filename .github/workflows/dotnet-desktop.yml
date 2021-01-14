@@ -76,11 +76,11 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v1.0.2 #microsoft/setup-msbuild@2008f912f56e61277eefaac6d1888b750582aa16
 
-    - name: Setup NuGet.exe for use with actions
-      uses: NuGet/setup-nuget@v1.0.2
+    #- name: Setup NuGet.exe for use with actions
+    #  uses: NuGet/setup-nuget@v1.0.2
     
-    - name: Nuget restore
-      run: nuget restore -verbosity normal
+    #- name: Nuget restore
+    #  run: nuget restore -verbosity normal
     
     - name: Build
       run:  msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration #MSBuild ip-tracker.sln
