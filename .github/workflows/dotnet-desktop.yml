@@ -83,6 +83,14 @@ jobs:
     
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Build the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+      #run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
+      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration /p:DeployOnBuild=true /p:PublishProfile=FolderProfile
       env:
         Configuration: ${{ matrix.configuration }}
+        
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2.2.2
+      with:
+        name: ip-tracker
+        path: bin\Release\net5.0-windows\publish
+      
