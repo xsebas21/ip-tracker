@@ -92,5 +92,5 @@ jobs:
       uses: actions/upload-artifact@v2.2.2
       with:
         name: ip-tracker
-        path: bin\Release\net5.0-windows\publish
+        path: bin/Release/net5.0-windows/publish
       
