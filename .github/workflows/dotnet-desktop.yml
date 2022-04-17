@@ -53,5 +53,5 @@ jobs:
     - name: Upload Artifacts
       uses: actions/upload-artifact@v1.0.0
       with:
-        name: FilesProcessorWin
-        path: FilesProcessor.Win\bin\Release\net6.0-windows
+        name: ip-tracker-win
+        path: ip-tracker-win\bin\Release\net5.0-windows
