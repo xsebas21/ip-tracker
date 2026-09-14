@@ -14,7 +14,8 @@ namespace ip_tracker_win
 
         #region Private Members
         private static readonly Engine _engine = new Engine();
-        private int _interval = 60000;
+        private int _interval = 5000;
+        private string _lastIp = string.Empty;
         private bool isFirstTime = true; // First run? Don't show a windows notification when the IP changes
         #endregion
 
@@ -129,6 +130,14 @@ namespace ip_tracker_win
         {
             var engineCheckEventArgs = (EngineCheckEventArgs)eventArgs;
 
+            // prevent duplicate IPs from being logged and notified
+            if (_lastIp == engineCheckEventArgs.IP)
+            {
+                return;
+            }
+
+            _lastIp = engineCheckEventArgs.IP;
+
             // Form
             this.Text = $"{engineCheckEventArgs.IP} - Current Public IP";
 
@@ -164,13 +173,26 @@ namespace ip_tracker_win
 
         private void NotifyWindows(EngineCheckEventArgs engineEventArgs)
         {
-            // Info and icon settings            
-            notifyIcon1.BalloonTipTitle = isFirstTime ? "Current IP: " : "IP Changed. New IP:";
-            notifyIcon1.BalloonTipText = engineEventArgs.IP;
-            notifyIcon1.Text = "Current IP: " + engineEventArgs.IP;
-            notifyIcon1.ShowBalloonTip(2000);
+            const string currentIPText = "Current IP: ";
+            const string ipChangedText = "IP Changed. New IP:";           
 
-            isFirstTime = false;            
+            // Info and icon settings            
+            if (isFirstTime)
+            {
+                // Info and icon settings            
+                notifyIcon1.BalloonTipTitle = currentIPText;
+            }
+            else
+            {
+                // Info and icon settings            
+                notifyIcon1.BalloonTipTitle = ipChangedText;
+            }
+
+            notifyIcon1.BalloonTipText = engineEventArgs.IP;
+            notifyIcon1.Text = currentIPText + engineEventArgs.IP;
+
+            notifyIcon1.ShowBalloonTip(2000);
+            //notifyIcon1.ShowBalloonTip(1000, "title", "text", ToolTipIcon.Info);
         }
         #endregion
 
