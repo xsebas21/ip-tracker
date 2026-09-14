@@ -31,7 +31,7 @@ jobs:
     - name: Install .NET Core
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: 5.0.x
+        dotnet-version: 10.0.x
 
     # Add  MSBuild to the PATH: https://github.com/microsoft/setup-msbuild
     - name: Setup MSBuild.exe
@@ -54,4 +54,4 @@ jobs:
       uses: actions/upload-artifact@v1.0.0
       with:
         name: ip-tracker-win
-        path: ip-tracker-win\bin\Release\net5.0-windows
+        path: ip-tracker-win\bin\Release\net10.0-windows
